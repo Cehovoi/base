@@ -134,10 +134,13 @@ def collector():
             if pays and debts:
                 pays = list(filter(None.__ne__, pays))
                 debts = list(filter(None.__ne__, debts))
-                print(pays, debts)
                 flag += 1
                 i_pays = generator(pays)
                 i_debts = generator(debts)
             else:
                 break
     return printer(answer, lost)
+
+
+if __name__ == '__main__':
+    collector()
