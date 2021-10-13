@@ -17,44 +17,10 @@ else:
 Base = declarative_base()
 
 
-def single(month, year='2021'):
-    session.add(Payment(year, month))
-    session.commit()
-    return
-
-
-def filler(order=(1,13,1), year='2021', flag=1):
-    if flag == 1:
-        p, a = Payment, Accrual
-    else:
-        a, p = Payment, Accrual
-    for month in range(order[0], order[1], order[2]):
-        session.add(p(year, month))
-        session.commit()
-        if month%2 == 0:
-            session.add(a(year, month))
-            session.commit()
-
-
-def eraser():
-    a = session.query(Accrual).all()
-    p = session.query(Payment).all()
-    cyc(a)
-    cyc(p)
-    return ('db erase')
-
-
-def cyc(data):
-    for i in data:
-        session.delete(i)
-        session.commit()
-
-
-
 class Accrual(Base):
     __tablename__ = 'accrual'
     id = Column(Integer, primary_key=True)
-    data = Column(String(50)) # other sql base need length String(50) 
+    data = Column(String(50))  # other sql base need length String(50)
     month = Column(Integer)
 
     def __init__(self, data, month):
@@ -86,6 +52,39 @@ Session.configure(bind=engine)
 session = Session()
 
 Base.metadata.create_all(bind=engine)
+
+
+def single(month, year='2021'):
+    session.add(Payment(year, month))
+    session.commit()
+    return
+
+
+def filler(order=(1, 13, 1), year='2021', flag=1):
+    if flag == 1:
+        p, a = Payment, Accrual
+    else:
+        a, p = Payment, Accrual
+    for month in range(order[0], order[1], order[2]):
+        session.add(p(year, month))
+        session.commit()
+        if month % 2 == 0:
+            session.add(a(year, month))
+            session.commit()
+
+
+def eraser():
+    a = session.query(Accrual).all()
+    p = session.query(Payment).all()
+    cyc(a)
+    cyc(p)
+    return ('db erase')
+
+
+def cyc(data):
+    for i in data:
+        session.delete(i)
+        session.commit()
 
 
 def shower():
